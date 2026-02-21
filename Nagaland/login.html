@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Nagaland Stone Crusher</title>
+    <meta name="description"
+        content="Login to your Nagaland Stone Crusher account to view orders and manage your profile.">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪨</text></svg>">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #030303;
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+            cursor: none
+        }
+
+        /* ===== CUSTOM CURSOR ===== */
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #d4a017;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform .15s;
+            box-shadow: 0 0 6px rgba(212, 160, 23, .4)
+        }
+
+        .cursor-ring {
+            display: none
+        }
+
+        /* ===== SPOTLIGHT ===== */
+        .spotlight {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(550px circle at var(--mx, 50%) var(--my, 50%), rgba(212, 160, 23, .025), transparent 55%)
+        }
+
+        /* ===== NOISE ===== */
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            opacity: .025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px
+        }
+
+        /* ===== BACKGROUND ===== */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden
+        }
+
+        canvas#constellation {
+            position: absolute;
+            inset: 0;
+            z-index: 1
+        }
+
+        /* Aurora blobs */
+        .aurora {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0
+        }
+
+        .a1 {
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(212, 160, 23, .12), rgba(166, 124, 0, .03), transparent);
+            top: -15%;
+            left: -8%;
+            animation: drift1 18s ease-in-out infinite alternate
+        }
+
+        .a2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(240, 192, 64, .09), rgba(212, 160, 23, .02), transparent);
+            bottom: -12%;
+            right: -6%;
+            animation: drift2 14s ease-in-out infinite alternate
+        }
+
+        .a3 {
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(255, 215, 0, .05), transparent);
+            top: 40%;
+            left: 55%;
+            animation: drift3 20s ease-in-out infinite alternate
+        }
+
+        .a4 {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(139, 90, 0, .07), transparent);
+            top: 10%;
+            right: 20%;
+            animation: drift1 16s ease-in-out infinite alternate-reverse
+        }
+
+        @keyframes drift1 {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg)
+            }
+
+            100% {
+                transform: translate(60px, -40px) scale(1.2) rotate(10deg)
+            }
+        }
+
+        @keyframes drift2 {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg)
+            }
+
+            100% {
+                transform: translate(-50px, 30px) scale(1.15) rotate(-8deg)
+            }
+        }
+
+        @keyframes drift3 {
+            0% {
+                transform: translate(0, 0) scale(.9)
+            }
+
+            100% {
+                transform: translate(30px, -60px) scale(1.1)
+            }
+        }
+
+        /* Shooting stars */
+        .shooting-star {
+            position: absolute;
+            width: 110px;
+            height: 1.5px;
+            background: linear-gradient(90deg, rgba(212, 160, 23, .5), transparent);
+            border-radius: 2px;
+            filter: drop-shadow(0 0 3px rgba(212, 160, 23, .25));
+            animation: shoot linear infinite;
+            opacity: 0;
+            z-index: 2
+        }
+
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -1px;
+            width: 3px;
+            height: 3px;
+            background: rgba(240, 192, 64, .8);
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(212, 160, 23, .3)
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translate(0, 0) rotate(-35deg);
+                opacity: 0
+            }
+
+            5% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: 1
+            }
+
+            100% {
+                transform: translate(800px, 400px) rotate(-35deg);
+                opacity: 0
+            }
+        }
+
+        .ss1 {
+            top: 8%;
+            left: 15%;
+            animation-duration: 3s;
+            animation-delay: 1s
+        }
+
+        .ss2 {
+            top: 15%;
+            left: 55%;
+            animation-duration: 2.5s;
+            animation-delay: 4s;
+            width: 80px
+        }
+
+        .ss3 {
+            top: 25%;
+            left: 30%;
+            animation-duration: 4s;
+            animation-delay: 7s;
+            width: 100px
+        }
+
+        .ss4 {
+            top: 5%;
+            left: 70%;
+            animation-duration: 3.5s;
+            animation-delay: 10s
+        }
+
+        .ss5 {
+            top: 35%;
+            left: 5%;
+            animation-duration: 2.8s;
+            animation-delay: 13s;
+            width: 90px
+        }
+
+        /* Grid */
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background-image: linear-gradient(rgba(212, 160, 23, .015) 1px, transparent 1px), linear-gradient(90deg, rgba(212, 160, 23, .015) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none;
+            animation: gridPulse 8s ease-in-out infinite
+        }
+
+        @keyframes gridPulse {
+
+            0%,
+            100% {
+                opacity: .5
+            }
+
+            50% {
+                opacity: .8
+            }
+        }
+
+        /* Floating stones */
+        .stone-float {
+            position: absolute;
+            z-index: 3;
+            pointer-events: none;
+            animation: stoneOrbit linear infinite;
+            opacity: .3
+        }
+
+        .stone-float span {
+            display: block;
+            font-size: 1.3rem;
+            filter: drop-shadow(0 0 4px rgba(212, 160, 23, .15));
+            animation: stoneSpin 8s linear infinite
+        }
+
+        @keyframes stoneOrbit {
+            0% {
+                transform: translate(0, 0)
+            }
+
+            25% {
+                transform: translate(20px, -30px)
+            }
+
+            50% {
+                transform: translate(-10px, -50px)
+            }
+
+            75% {
+                transform: translate(-30px, -20px)
+            }
+
+            100% {
+                transform: translate(0, 0)
+            }
+        }
+
+        @keyframes stoneSpin {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        /* ===== SCENE ===== */
+        .login-scene {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            perspective: 1200px
+        }
+
+        /* ===== GLASS CARD ===== */
+        .glass-card {
+            width: 100%;
+            max-width: 460px;
+            background: rgba(10, 10, 8, .72);
+            backdrop-filter: blur(50px) saturate(1.8);
+            border-radius: 28px;
+            padding: 48px 40px 40px;
+            position: relative;
+            overflow: visible;
+            transform-style: preserve-3d;
+            transition: transform .4s cubic-bezier(.4, 0, .2, 1), box-shadow .4s ease;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, .7), 0 0 60px rgba(212, 160, 23, .04), inset 0 1px 0 rgba(255, 255, 255, .05);
+            animation: cardEntrance 1s cubic-bezier(.34, 1.56, .64, 1) forwards;
+            opacity: 0;
+            transform: translateY(40px) scale(.95) rotateX(5deg)
+        }
+
+        @keyframes cardEntrance {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0)
+            }
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 50px 120px rgba(0, 0, 0, .8), 0 0 80px rgba(212, 160, 23, .06), inset 0 1px 0 rgba(255, 255, 255, .07)
+        }
+
+        /* Animated border */
+        .card-border-glow {
+            position: absolute;
+            inset: -2px;
+            border-radius: 30px;
+            background: conic-gradient(from var(--angle, 0deg), transparent 0%, rgba(212, 160, 23, .25) 10%, transparent 20%, transparent 50%, rgba(166, 124, 0, .18) 60%, transparent 70%);
+            z-index: -1;
+            animation: borderRotate 6s linear infinite;
+            opacity: .5
+        }
+
+        @keyframes borderRotate {
+            to {
+                --angle: 360deg
+            }
+        }
+
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false
+        }
+
+        /* Inner glow */
+        .card-inner-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(212, 160, 23, .035), transparent 55%);
+            pointer-events: none;
+            z-index: 0
+        }
+
+        /* ===== LOGO ===== */
+        .login-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 2
+        }
+
+        .logo-orb {
+            width: 76px;
+            height: 76px;
+            background: linear-gradient(135deg, #d4a017 0%, #8b5a00 40%, #d4a017 80%, #f0c040 100%);
+            background-size: 300% 300%;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 14px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(212, 160, 23, .25), 0 0 20px rgba(212, 160, 23, .08);
+            animation: orbFloat 4s ease-in-out infinite, orbShimmer 3s ease infinite
+        }
+
+        @keyframes orbFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg)
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(2deg)
+            }
+        }
+
+        @keyframes orbShimmer {
+
+            0%,
+            100% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+        }
+
+        /* Orbiting rings */
+        .orb-ring {
+            position: absolute;
+            inset: -8px;
+            border-radius: 26px;
+            border: 1.5px solid transparent;
+            border-top-color: rgba(212, 160, 23, .3);
+            border-right-color: rgba(212, 160, 23, .12);
+            animation: ringOrbit 3s linear infinite
+        }
+
+        @keyframes ringOrbit {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .orb-ring2 {
+            position: absolute;
+            inset: -14px;
+            border-radius: 30px;
+            border: 1px solid transparent;
+            border-bottom-color: rgba(240, 192, 64, .18);
+            animation: ringOrbit 5s linear infinite reverse
+        }
+
+        /* Pulse rings */
+        .orb-pulse {
+            position: absolute;
+            inset: 0;
+            border-radius: 22px;
+            border: 1px solid rgba(212, 160, 23, .18);
+            animation: pulseOut 2.5s ease-out infinite;
+            pointer-events: none
+        }
+
+        .orb-pulse:nth-child(2) {
+            animation-delay: .8s
+        }
+
+        @keyframes pulseOut {
+            0% {
+                transform: scale(1);
+                opacity: .6
+            }
+
+            100% {
+                transform: scale(1.8);
+                opacity: 0
+            }
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 20%, #d4a017 60%, #f0c040);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -.5px
+        }
+
+        /* ===== GREETING ===== */
+        .login-greeting {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 2
+        }
+
+        .greeting-line {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            min-height: 2em;
+            opacity: 0;
+            animation: fadeUp .6s ease .6s forwards
+        }
+
+        .greeting-sub {
+            color: #7a7568;
+            font-size: .85rem;
+            opacity: 0;
+            animation: fadeUp .6s ease .8s forwards
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .greeting-line,
+        .greeting-sub {
+            transform: translateY(12px)
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: #d4a017;
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0
+            }
+        }
+
+        /* ===== ALERT ===== */
+        .auth-alert {
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: .85rem;
+            margin-bottom: 16px;
+            display: none;
+            animation: alertPop .35s cubic-bezier(.34, 1.56, .64, 1);
+            position: relative;
+            z-index: 2
+        }
+
+        .auth-alert.error {
+            background: rgba(239, 68, 68, .08);
+            border: 1px solid rgba(239, 68, 68, .2);
+            color: #fca5a5;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .auth-alert.success {
+            background: rgba(34, 197, 94, .08);
+            border: 1px solid rgba(34, 197, 94, .2);
+            color: #86efac;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        @keyframes alertPop {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(.95)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1)
+            }
+        }
+
+        /* ===== SOCIAL BUTTONS ===== */
+        .social-grid {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 2
+        }
+
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 13px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: .88rem;
+            cursor: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+            transition: all .35s cubic-bezier(.34, 1.56, .64, 1)
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px) scale(1.03)
+        }
+
+        .social-btn:active {
+            transform: translateY(0) scale(.97);
+            transition-duration: .1s
+        }
+
+        .google-btn {
+            background: rgba(255, 255, 255, .95);
+            color: #1a1a1a;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .2)
+        }
+
+        .google-btn:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .3)
+        }
+
+        .google-btn svg {
+            width: 18px;
+            height: 18px
+        }
+
+        .phone-btn {
+            background: linear-gradient(135deg, rgba(37, 211, 102, .12), rgba(37, 211, 102, .03));
+            color: #4ade80;
+            border: 1px solid rgba(37, 211, 102, .15) !important
+        }
+
+        .phone-btn:hover {
+            border-color: rgba(37, 211, 102, .4) !important;
+            box-shadow: 0 8px 30px rgba(37, 211, 102, .08)
+        }
+
+        .btn-shimmer {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .15), transparent);
+            transform: skewX(-20deg);
+            transition: left .6s
+        }
+
+        .social-btn:hover .btn-shimmer {
+            left: 150%
+        }
+
+        /* ===== DIVIDER ===== */
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 18px 0;
+            color: rgba(138, 133, 120, .5);
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 160, 23, .12), transparent)
+        }
+
+        /* ===== FORM ===== */
+        .form-field {
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            animation: fieldReveal .5s ease forwards;
+            transform: translateX(-10px)
+        }
+
+        .form-field:nth-child(1) {
+            animation-delay: 1s
+        }
+
+        .form-field:nth-child(2) {
+            animation-delay: 1.15s
+        }
+
+        @keyframes fieldReveal {
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        .form-field label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 700;
+            color: #5a5550;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all .3s
+        }
+
+        .form-field:focus-within label {
+            color: #d4a017;
+            letter-spacing: 1.5px
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center
+        }
+
+        .input-wrap .icon {
+            position: absolute;
+            left: 16px;
+            font-size: .9rem;
+            color: #3a3530;
+            pointer-events: none;
+            transition: all .35s cubic-bezier(.34, 1.56, .64, 1);
+            z-index: 3
+        }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            background: rgba(255, 255, 255, .03);
+            border: 1.5px solid rgba(60, 55, 48, .5);
+            border-radius: 14px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: .9rem;
+            transition: all .35s cubic-bezier(.4, 0, .2, 1);
+            cursor: none;
+            position: relative;
+            z-index: 2
+        }
+
+        .input-wrap input:focus {
+            outline: none;
+            border-color: rgba(212, 160, 23, .4);
+            background: rgba(212, 160, 23, .02);
+            box-shadow: 0 0 0 3px rgba(212, 160, 23, .04), 0 4px 20px rgba(0, 0, 0, .15)
+        }
+
+        .input-wrap input:focus~.icon {
+            color: #d4a017;
+            transform: scale(1.15)
+        }
+
+        .input-wrap input::placeholder {
+            color: #45403a
+        }
+
+        /* Input glow line */
+        .input-glow {
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            width: 0;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, rgba(212, 160, 23, .6), rgba(240, 192, 64, .8), rgba(212, 160, 23, .6), transparent);
+            transition: all .4s cubic-bezier(.4, 0, .2, 1);
+            transform: translateX(-50%);
+            border-radius: 2px;
+            z-index: 3
+        }
+
+        .input-wrap input:focus~.input-glow {
+            width: 65%
+        }
+
+        /* Pass toggle */
+        .pass-toggle {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            cursor: none;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            z-index: 3;
+            transition: all .2s
+        }
+
+        .pass-toggle .eye-icon {
+            width: 22px;
+            height: 22px;
+            position: relative
+        }
+
+        .eye-open,
+        .eye-closed {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s
+        }
+
+        .eye-open svg,
+        .eye-closed svg {
+            width: 20px;
+            height: 20px;
+            stroke: #5a5550;
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke .2s
+        }
+
+        .pass-toggle:hover svg {
+            stroke: #d4a017
+        }
+
+        .eye-closed {
+            opacity: 0;
+            transform: scale(.8)
+        }
+
+        .pass-toggle.active .eye-open {
+            opacity: 0;
+            transform: scale(.8)
+        }
+
+        .pass-toggle.active .eye-closed {
+            opacity: 1;
+            transform: scale(1)
+        }
+
+        .hand-cover {
+            position: absolute;
+            right: 48px;
+            font-size: 1.3rem;
+            opacity: 0;
+            transform: translateX(15px);
+            transition: all .4s cubic-bezier(.34, 1.56, .64, 1);
+            pointer-events: none;
+            z-index: 3
+        }
+
+        .hand-cover.show {
+            opacity: 1;
+            transform: translateX(0)
+        }
+
+        .forgot-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -8px;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 2
+        }
+
+        .forgot-link {
+            color: rgba(212, 160, 23, .7);
+            font-size: .78rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all .25s;
+            cursor: none;
+            position: relative
+        }
+
+        .forgot-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, #d4a017, #f0c040);
+            transition: width .3s
+        }
+
+        .forgot-link:hover {
+            color: #f0c040
+        }
+
+        .forgot-link:hover::after {
+            width: 100%
+        }
+
+        /* ===== SUBMIT ===== */
+        .auth-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #d4a017, #8b5a00, #d4a017);
+            background-size: 200% 200%;
+            color: #000;
+            border: none;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: .95rem;
+            cursor: none;
+            font-family: 'Inter', sans-serif;
+            transition: all .35s cubic-bezier(.34, 1.56, .64, 1);
+            letter-spacing: .5px;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+            animation: submitGlow 3s ease infinite
+        }
+
+        @keyframes submitGlow {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+                box-shadow: 0 4px 18px rgba(212, 160, 23, .15)
+            }
+
+            50% {
+                background-position: 100% 50%;
+                box-shadow: 0 6px 28px rgba(212, 160, 23, .22)
+            }
+        }
+
+        .auth-submit:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 12px 40px rgba(212, 160, 23, .3) !important
+        }
+
+        .auth-submit:active {
+            transform: translateY(0) scale(.98);
+            transition-duration: .1s
+        }
+
+        .auth-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .2), transparent);
+            transform: skewX(-20deg);
+            transition: left .7s
+        }
+
+        .auth-submit:hover::before {
+            left: 150%
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .25);
+            transform: scale(0);
+            animation: rippleAnim .6s ease-out;
+            pointer-events: none
+        }
+
+        @keyframes rippleAnim {
+            to {
+                transform: scale(4);
+                opacity: 0
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        .auth-footer {
+            text-align: center;
+            margin-top: 22px;
+            font-size: .85rem;
+            color: #5a5550;
+            position: relative;
+            z-index: 2
+        }
+
+        .auth-footer a {
+            color: #d4a017;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: none;
+            transition: all .25s;
+            position: relative
+        }
+
+        .auth-footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: linear-gradient(90deg, #d4a017, #f0c040);
+            transition: width .3s
+        }
+
+        .auth-footer a:hover {
+            color: #f0c040
+        }
+
+        .auth-footer a:hover::after {
+            width: 100%
+        }
+
+        /* ===== BACK ===== */
+        .back-home {
+            position: fixed;
+            top: 24px;
+            left: 28px;
+            z-index: 100;
+            color: #5a5550;
+            font-size: .85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            cursor: none;
+            transition: all .3s;
+            padding: 8px 18px;
+            border-radius: 12px;
+            background: rgba(10, 10, 8, .6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, .04)
+        }
+
+        .back-home:hover {
+            color: #d4a017;
+            border-color: rgba(212, 160, 23, .15);
+            background: rgba(10, 10, 8, .85);
+            transform: translateX(-3px)
+        }
+
+        /* ===== TRUST ===== */
+        .trust-strip {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 24px;
+            font-size: .7rem;
+            color: #3a3530;
+            letter-spacing: .5px
+        }
+
+        .trust-strip span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: none
+        }
+
+        .trust-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #d4a017;
+            box-shadow: 0 0 6px rgba(212, 160, 23, .35);
+            animation: dotPulse 2s ease-in-out infinite
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                opacity: .5;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.3)
+            }
+        }
+
+        /* ===== MODALS ===== */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .8);
+            backdrop-filter: blur(16px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px
+        }
+
+        .modal-bg.active {
+            display: flex
+        }
+
+        .goog-modal {
+            background: rgba(15, 15, 12, .92);
+            backdrop-filter: blur(50px);
+            border-radius: 24px;
+            border: 1px solid rgba(212, 160, 23, .08);
+            padding: 36px;
+            width: 100%;
+            max-width: 420px;
+            animation: modalPop .45s cubic-bezier(.34, 1.56, .64, 1);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, .6), 0 0 40px rgba(212, 160, 23, .03)
+        }
+
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(.88) translateY(30px)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0)
+            }
+        }
+
+        .goog-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 8px
+        }
+
+        .goog-modal-header svg {
+            width: 32px;
+            height: 32px
+        }
+
+        .goog-modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700
+        }
+
+        .goog-modal p {
+            color: #5a5550;
+            font-size: .88rem;
+            margin: 8px 0 24px;
+            line-height: 1.6
+        }
+
+        .goog-modal .form-field {
+            margin-bottom: 16px;
+            opacity: 1;
+            transform: none;
+            animation: none
+        }
+
+        .goog-modal .input-wrap input {
+            padding-left: 16px;
+            cursor: none
+        }
+
+        .goog-modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px
+        }
+
+        .goog-modal-actions button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: .88rem;
+            cursor: none;
+            font-family: 'Inter', sans-serif;
+            transition: all .25s cubic-bezier(.34, 1.56, .64, 1);
+            border: none
+        }
+
+        .modal-cancel-btn {
+            background: rgba(255, 255, 255, .04);
+            color: #7a7568;
+            border: 1px solid rgba(60, 55, 48, .5) !important
+        }
+
+        .modal-cancel-btn:hover {
+            background: rgba(255, 255, 255, .07);
+            transform: translateY(-1px)
+        }
+
+        .modal-confirm-btn {
+            background: linear-gradient(135deg, #d4a017, #a67c00);
+            color: #000
+        }
+
+        .modal-confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 160, 23, .2)
+        }
+
+        .otp-input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0
+        }
+
+        .otp-box {
+            width: 52px;
+            height: 58px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, .03);
+            border: 1.5px solid rgba(60, 55, 48, .5);
+            border-radius: 14px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            cursor: none;
+            transition: all .25s
+        }
+
+        .otp-box:focus {
+            outline: none;
+            border-color: rgba(212, 160, 23, .5);
+            background: rgba(212, 160, 23, .03);
+            box-shadow: 0 0 0 3px rgba(212, 160, 23, .05)
+        }
+
+        .forgot-steps {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px
+        }
+
+        .forgot-step {
+            flex: 1;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(60, 55, 48, .5);
+            transition: all .4s
+        }
+
+        .forgot-step.active {
+            background: linear-gradient(90deg, #d4a017, #f0c040);
+            box-shadow: 0 0 6px rgba(212, 160, 23, .15)
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:520px) {
+            body {
+                cursor: auto
+            }
+
+            .cursor-dot,
+            .cursor-ring {
+                display: none
+            }
+
+            .login-scene {
+                padding: 16px;
+                min-height: 100dvh;
+            }
+
+            .glass-card {
+                padding: 32px 20px 28px;
+                border-radius: 22px;
+                margin: 0 4px;
+            }
+
+            .logo-orb {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+                border-radius: 18px;
+            }
+
+            .logo-text {
+                font-size: 1.25rem;
+            }
+
+            .greeting-line {
+                font-size: 1.3rem
+            }
+
+            .greeting-sub {
+                font-size: .8rem;
+            }
+
+            .social-grid {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .social-btn {
+                padding: 14px;
+                min-height: 48px;
+                font-size: .9rem;
+                cursor: auto;
+            }
+
+            .form-field label {
+                font-size: .75rem;
+            }
+
+            .input-wrap input {
+                padding: 13px 16px 13px 40px;
+                font-size: .88rem;
+                min-height: 48px;
+                cursor: auto;
+            }
+
+            .auth-submit {
+                padding: 15px;
+                font-size: .9rem;
+                min-height: 50px;
+                cursor: auto;
+            }
+
+            .auth-footer {
+                font-size: .82rem;
+            }
+
+            .auth-footer a {
+                cursor: auto;
+            }
+
+            .auth-divider {
+                margin: 14px 0;
+                font-size: .68rem;
+            }
+
+            .forgot-link {
+                cursor: auto;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+            }
+
+            .trust-strip {
+                display: none
+            }
+
+            .back-home {
+                top: 14px;
+                left: 14px;
+                padding: 6px 14px;
+                font-size: .8rem;
+                cursor: auto;
+                min-height: 40px;
+                display: flex;
+                align-items: center;
+            }
+
+            .otp-box {
+                width: 44px;
+                height: 50px;
+                font-size: 1.2rem;
+                cursor: auto;
+            }
+
+            .pass-toggle {
+                cursor: auto;
+                min-width: 44px;
+                min-height: 44px;
+            }
+
+            .goog-modal {
+                padding: 24px 18px;
+                border-radius: 20px;
+            }
+
+            .goog-modal-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .goog-modal-actions button {
+                padding: 13px;
+                min-height: 48px;
+                cursor: auto;
+            }
+        }
+
+        @media(max-width:380px) {
+            .glass-card {
+                padding: 24px 16px 24px;
+            }
+
+            .logo-orb {
+                width: 52px;
+                height: 52px;
+                font-size: 1.5rem;
+            }
+
+            .greeting-line {
+                font-size: 1.15rem;
+            }
+
+            .otp-box {
+                width: 38px;
+                height: 44px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <a href="index.html" class="back-home">← Back to Home</a>
+
+    <!-- BACKGROUND -->
+    <div class="bg-layer">
+        <div class="aurora a1"></div>
+        <div class="aurora a2"></div>
+        <div class="aurora a3"></div>
+        <div class="aurora a4"></div>
+        <div class="shooting-star ss1"></div>
+        <div class="shooting-star ss2"></div>
+        <div class="shooting-star ss3"></div>
+        <div class="shooting-star ss4"></div>
+        <div class="shooting-star ss5"></div>
+        <canvas id="constellation"></canvas>
+        <div class="grid-bg"></div>
+    </div>
+    <div class="spotlight" id="spotlight"></div>
+    <div class="noise"></div>
+
+    <!-- Floating stones -->
+    <div class="stone-float" style="top:18%;left:8%;animation-duration:12s"><span>🪨</span></div>
+    <div class="stone-float" style="top:70%;right:10%;animation-duration:16s;animation-delay:-4s"><span
+            style="font-size:1.1rem">🪨</span></div>
+    <div class="stone-float" style="top:30%;right:6%;animation-duration:14s;animation-delay:-7s"><span
+            style="font-size:1rem">⛏️</span></div>
+    <div class="stone-float" style="bottom:15%;left:12%;animation-duration:18s;animation-delay:-2s"><span
+            style="font-size:1.1rem">💎</span></div>
+
+    <!-- TRUST -->
+    <div class="trust-strip">
+        <span><span class="trust-dot"></span>100% Secure</span>
+        <span><span class="trust-dot"></span>Encrypted</span>
+        <span><span class="trust-dot"></span>No Data Sharing</span>
+    </div>
+
+    <!-- ===== LOGIN ===== -->
+    <div class="login-scene">
+        <div class="glass-card" id="login-card">
+            <div class="card-border-glow"></div>
+            <div class="card-inner-glow"></div>
+            <div class="login-logo">
+                <div class="logo-orb">
+                    <div class="orb-pulse"></div>
+                    <div class="orb-pulse"></div>
+                    <div class="orb-ring"></div>
+                    <div class="orb-ring2"></div>
+                    🪨
+                </div>
+                <div class="logo-text">Nagaland Stone Crusher</div>
+            </div>
+            <div class="login-greeting">
+                <div class="greeting-line" id="greeting-text">Welcome back 👋</div>
+                <div class="greeting-sub">Login to track orders & manage your account</div>
+            </div>
+            <div id="auth-alert" class="auth-alert"></div>
+            <div class="social-grid">
+                <button class="social-btn google-btn" onclick="openGoogleModal()">
+                    <span class="btn-shimmer"></span>
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4"
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                        <path fill="#34A853"
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05"
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#EA4335"
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
+                    Google
+                </button>
+                <button class="social-btn phone-btn" onclick="openPhoneModal()"><span class="btn-shimmer"></span>📱
+                    Phone</button>
+            </div>
+            <div class="auth-divider">or use password</div>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-field">
+                    <label>Email or Phone</label>
+                    <div class="input-wrap">
+                        <span class="icon">📧</span>
+                        <input type="text" id="login-identifier" placeholder="Enter email or phone number"
+                            autocomplete="username" required>
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Password</label>
+                    <div class="input-wrap">
+                        <span class="icon">🔒</span>
+                        <input type="password" id="login-password" placeholder="Enter your password"
+                            autocomplete="current-password" required>
+                        <span class="hand-cover" id="hand-cover">🤚</span>
+                        <div class="input-glow"></div>
+                        <button type="button" class="pass-toggle" id="pass-toggle" onclick="togglePassword()">
+                            <div class="eye-icon">
+                                <div class="eye-open"><svg viewBox="0 0 24 24">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg></div>
+                                <div class="eye-closed"><svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                        <line x1="1" y1="1" x2="23" y2="23" />
+                                    </svg></div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="forgot-row"><a href="#" class="forgot-link" onclick="openForgotModal(event)">Forgot
+                        Password?</a></div>
+                <button type="submit" class="auth-submit" id="submit-btn">Login →</button>
+            </form>
+            <div class="auth-footer">Don't have an account? <a href="signup.html">Create one free</a></div>
+        </div>
+    </div>
+
+    <!-- GOOGLE MODAL -->
+    <div class="modal-bg" id="google-modal">
+        <div class="goog-modal">
+            <div class="goog-modal-header">
+                <svg viewBox="0 0 24 24">
+                    <path fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                    <path fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                    <path fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+                <h3>Sign in with Google</h3>
+            </div>
+            <p>Enter your Google email to sign in or create an account instantly.</p>
+            <div id="google-alert" class="auth-alert"></div>
+            <div id="google-step-1">
+                <div class="form-field"><label>Google Email</label>
+                    <div class="input-wrap"><input type="email" id="google-email" placeholder="yourname@gmail.com"
+                            autofocus></div>
+                </div>
+                <div class="goog-modal-actions"><button class="modal-cancel-btn"
+                        onclick="closeModal('google-modal')">Cancel</button><button class="modal-confirm-btn"
+                        onclick="googleStep2()">Next →</button></div>
+            </div>
+            <div id="google-step-2" style="display:none">
+                <div class="form-field"><label>Your Name</label>
+                    <div class="input-wrap"><input type="text" id="google-name" placeholder="Enter your full name"
+                            pattern="[A-Za-z\s]+" oninput="this.value=this.value.replace(/[^A-Za-z\s]/g,'')"></div>
+                </div>
+                <div class="form-field"><label>Phone Number</label>
+                    <div class="input-wrap"><input type="tel" id="google-phone" placeholder="10-digit phone number"
+                            maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                </div>
+                <div class="goog-modal-actions"><button class="modal-cancel-btn" onclick="googleBack()">←
+                        Back</button><button class="modal-confirm-btn" onclick="googleFinish()">Create Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PHONE MODAL -->
+    <div class="modal-bg" id="phone-modal">
+        <div class="goog-modal">
+            <div class="goog-modal-header"><span style="font-size:1.8rem">📱</span>
+                <h3>Phone Login</h3>
+            </div>
+            <div id="phone-alert" class="auth-alert"></div>
+            <div id="phone-step-1">
+                <p>Enter your 10-digit phone number to login or create an account.</p>
+                <div class="form-field"><label>Phone Number</label>
+                    <div class="input-wrap"><input type="tel" id="phone-input" placeholder="Enter 10-digit number"
+                            maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                </div>
+                <div class="goog-modal-actions"><button class="modal-cancel-btn"
+                        onclick="closeModal('phone-modal')">Cancel</button><button class="modal-confirm-btn"
+                        onclick="phoneStep2()">Send OTP →</button></div>
+            </div>
+            <div id="phone-step-2" style="display:none">
+                <p>Enter the 4-digit OTP.<br><small style="color:#d4a017">(Demo: use 1234)</small></p>
+                <div class="otp-input-group">
+                    <input type="text" class="otp-box" maxlength="1" oninput="otpAutoNext(this,0)" data-otp="0">
+                    <input type="text" class="otp-box" maxlength="1" oninput="otpAutoNext(this,1)" data-otp="1">
+                    <input type="text" class="otp-box" maxlength="1" oninput="otpAutoNext(this,2)" data-otp="2">
+                    <input type="text" class="otp-box" maxlength="1" oninput="otpAutoNext(this,3)" data-otp="3">
+                </div>
+                <div class="goog-modal-actions"><button class="modal-cancel-btn" onclick="phoneBack()">←
+                        Back</button><button class="modal-confirm-btn" onclick="phoneVerify()">Verify & Login</button>
+                </div>
+            </div>
+            <div id="phone-step-3" style="display:none">
+                <p>Enter your name to complete signup.</p>
+                <div class="form-field"><label>Your Name</label>
+                    <div class="input-wrap"><input type="text" id="phone-name" placeholder="Enter your full name"
+                            pattern="[A-Za-z\s]+" oninput="this.value=this.value.replace(/[^A-Za-z\s]/g,'')"></div>
+                </div>
+                <div class="goog-modal-actions"><button class="modal-cancel-btn"
+                        onclick="closeModal('phone-modal')">Cancel</button><button class="modal-confirm-btn"
+                        onclick="phoneFinish()">Complete Signup</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORGOT MODAL -->
+    <div class="modal-bg" id="forgot-modal">
+        <div class="goog-modal">
+            <div class="goog-modal-header"><span style="font-size:1.8rem">🔑</span>
+                <h3>Reset Password</h3>
+            </div>
+            <p>Enter your phone or email and set a new password.</p>
+            <div class="forgot-steps">
+                <div class="forgot-step active" id="fstep-1"></div>
+                <div class="forgot-step" id="fstep-2"></div>
+            </div>
+            <div id="forgot-alert" class="auth-alert"></div>
+            <div id="forgot-step-1">
+                <div class="form-field"><label>Phone or Email</label>
+                    <div class="input-wrap"><input type="text" id="forgot-identifier"
+                            placeholder="Enter registered phone or email"></div>
+                </div>
+                <div class="goog-modal-actions"><button class="modal-cancel-btn"
+                        onclick="closeModal('forgot-modal')">Cancel</button><button class="modal-confirm-btn"
+                        onclick="forgotNext()">Next →</button></div>
+            </div>
+            <div id="forgot-step-2" style="display:none">
+                <div class="form-field"><label>New Password</label>
+                    <div class="input-wrap"><input type="password" id="forgot-pass" placeholder="Enter new password"
+                            minlength="6"></div>
+                </div>
+                <div class="form-field"><label>Confirm Password</label>
+                    <div class="input-wrap"><input type="password" id="forgot-confirm"
+                            placeholder="Confirm new password"></div>
+                </div>
+                <div class="goog-modal-actions"><button class="modal-cancel-btn" onclick="forgotBackStep()">←
+                        Back</button><button class="modal-confirm-btn" onclick="forgotReset()">Reset Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (AUTH.isLoggedIn()) window.location.href = 'account.html';
+
+        // ===== CUSTOM CURSOR =====
+        const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing'), spot = document.getElementById('spotlight');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => {
+            mx = e.clientX; my = e.clientY;
+            dot.style.left = mx - 4 + 'px'; dot.style.top = my - 4 + 'px';
+            spot.style.setProperty('--mx', mx + 'px'); spot.style.setProperty('--my', my + 'px');
+        });
+        function animateRing() { rx += (mx - rx) * .12; ry += (my - ry) * .12; ring.style.left = rx - 25 + 'px'; ring.style.top = ry - 25 + 'px'; requestAnimationFrame(animateRing) } animateRing();
+        document.querySelectorAll('button,a,input,.pass-toggle').forEach(el => {
+            el.addEventListener('mouseenter', () => { dot.style.transform = 'scale(1.8)' });
+            el.addEventListener('mouseleave', () => { dot.style.transform = 'scale(1)' });
+        });
+
+        // ===== CONSTELLATION =====
+        (function () {
+            const c = document.getElementById('constellation'), ctx = c.getContext('2d');
+            let w, h, pts = [];
+            function resize() { w = c.width = innerWidth; h = c.height = innerHeight }
+            resize(); addEventListener('resize', resize);
+            class P {
+                constructor() { this.x = Math.random() * w; this.y = Math.random() * h; this.vx = (Math.random() - .5) * .3; this.vy = (Math.random() - .5) * .3; this.r = Math.random() * 2.5 + 1; this.a = Math.random() * .6 + .3; this.p = Math.random() * 6.28 }
+                update() {
+                    this.p += .02; const a = this.a + Math.sin(this.p) * .15;
+                    if (mx) { const dx = mx - this.x, dy = my - this.y, d = Math.sqrt(dx * dx + dy * dy); if (d < 300) { const f = (300 - d) / 300 * .02; this.vx += dx * f; this.vy += dy * f } }
+                    this.vx *= .99; this.vy *= .99; this.x += this.vx; this.y += this.vy;
+                    if (this.x < 0 || this.x > w) this.vx *= -1; if (this.y < 0 || this.y > h) this.vy *= -1; return a
+                }
+                draw(a) {
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, 6.28); ctx.fillStyle = `rgba(240,192,64,${a})`; ctx.fill();
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.r * 3, 0, 6.28); ctx.fillStyle = `rgba(212,160,23,${a * .2})`; ctx.fill();
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.r * 5, 0, 6.28); ctx.fillStyle = `rgba(212,160,23,${a * .06})`; ctx.fill();
+                }
+            }
+            const n = innerWidth < 600 ? 50 : 120; for (let i = 0; i < n; i++) pts.push(new P());
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                for (let i = 0; i < pts.length; i++) {
+                    const a = pts[i].update(); pts[i].draw(a);
+                    for (let j = i + 1; j < pts.length; j++) {
+                        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = Math.sqrt(dx * dx + dy * dy);
+                        if (d < 180) { ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.strokeStyle = `rgba(212,160,23,${(1 - d / 180) * .35})`; ctx.lineWidth = 1; ctx.stroke() }
+                    }
+                }
+                if (mx) for (const p of pts) { const dx = mx - p.x, dy = my - p.y, d = Math.sqrt(dx * dx + dy * dy); if (d < 250) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mx, my); ctx.strokeStyle = `rgba(240,192,64,${(1 - d / 250) * .5})`; ctx.lineWidth = 1.2; ctx.stroke() } }
+                requestAnimationFrame(draw)
+            } draw()
+        })();
+
+        // ===== 3D TILT =====
+        (function () {
+            const c = document.getElementById('login-card'), s = document.querySelector('.login-scene');
+            s.addEventListener('mousemove', e => { const r = s.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; c.style.transform = `rotateY(${x * 8}deg) rotateX(${y * -8}deg)` });
+            s.addEventListener('mouseleave', () => { c.style.transform = 'rotateY(0) rotateX(0)' })
+        })();
+
+        // ===== RIPPLE =====
+        document.getElementById('submit-btn').addEventListener('click', function (e) { const r = document.createElement('span'); r.className = 'ripple'; const b = this.getBoundingClientRect(); r.style.left = (e.clientX - b.left) + 'px'; r.style.top = (e.clientY - b.top) + 'px'; this.appendChild(r); setTimeout(() => r.remove(), 600) });
+
+        // ===== TYPING =====
+        (function () {
+            const msgs = ['Welcome back 👋', 'Good to see you ✨', 'Ready to order? 🪨', 'Let\'s build something 🏗️'];
+            const el = document.getElementById('greeting-text'); let idx = 0;
+            function type() {
+                const t = msgs[idx]; let i = 0; el.textContent = '';
+                const cur = document.createElement('span'); cur.className = 'typing-cursor'; el.appendChild(cur);
+                const iv = setInterval(() => { el.textContent = t.substring(0, ++i); el.appendChild(cur); if (i >= t.length) { clearInterval(iv); setTimeout(() => { let j = t.length; const dv = setInterval(() => { el.textContent = t.substring(0, --j); el.appendChild(cur); if (j <= 0) { clearInterval(dv); idx = (idx + 1) % msgs.length; setTimeout(type, 300) } }, 30) }, 2500) } }, 70)
+            }
+            setTimeout(type, 1200)
+        })();
+
+        // ===== HELPERS =====
+        function showAlert(id, m, t) { const e = document.getElementById(id); e.innerHTML = (t === 'error' ? '⚠️ ' : '✅ ') + m; e.className = 'auth-alert ' + t }
+        function closeModal(id) { document.getElementById(id).classList.remove('active') }
+        function togglePassword() { const i = document.getElementById('login-password'), t = document.getElementById('pass-toggle'), h = document.getElementById('hand-cover'); if (i.type === 'password') { i.type = 'text'; t.classList.add('active'); h.classList.remove('show') } else { i.type = 'password'; t.classList.remove('active'); h.classList.add('show'); setTimeout(() => h.classList.remove('show'), 800) } }
+        document.getElementById('login-password').addEventListener('focus', () => { const h = document.getElementById('hand-cover'); if (document.getElementById('login-password').type === 'password') { h.classList.add('show'); setTimeout(() => h.classList.remove('show'), 1200) } });
+
+        // ===== LOGIN =====
+        function handleLogin(e) { e.preventDefault(); const id = document.getElementById('login-identifier').value.trim(), pw = document.getElementById('login-password').value; if (!id) { showAlert('auth-alert', 'Please enter your email or phone.', 'error'); return } if (!pw) { showAlert('auth-alert', 'Please enter your password.', 'error'); return } const r = AUTH.login({ identifier: id, password: pw }); if (r.ok) { showAlert('auth-alert', 'Login successful! Redirecting...', 'success'); setTimeout(() => location.href = 'account.html', 800) } else showAlert('auth-alert', r.msg, 'error') }
+
+        // ===== GOOGLE =====
+        let gET = '';
+        function openGoogleModal() { document.getElementById('google-modal').classList.add('active'); document.getElementById('google-step-1').style.display = 'block'; document.getElementById('google-step-2').style.display = 'none'; document.getElementById('google-email').focus() }
+        function googleStep2() { const e = document.getElementById('google-email').value.trim(); if (!e || !e.includes('@')) { showAlert('google-alert', 'Please enter a valid email.', 'error'); return } gET = e; const u = JSON.parse(localStorage.getItem('nsc_users') || '[]').find(u => u.email === e); if (u) { AUTH._setSession(u); showAlert('google-alert', 'Welcome back! Redirecting...', 'success'); setTimeout(() => location.href = 'account.html', 800) } else { document.getElementById('google-step-1').style.display = 'none'; document.getElementById('google-step-2').style.display = 'block'; document.getElementById('google-alert').className = 'auth-alert' } }
+        function googleBack() { document.getElementById('google-step-1').style.display = 'block'; document.getElementById('google-step-2').style.display = 'none' }
+        function googleFinish() { const n = document.getElementById('google-name').value.trim(), p = document.getElementById('google-phone').value.trim(); if (!n || !/^[A-Za-z\s]+$/.test(n)) { showAlert('google-alert', 'Enter a valid name.', 'error'); return } if (!p || !/^\d{10}$/.test(p)) { showAlert('google-alert', 'Enter a valid 10-digit phone.', 'error'); return } const u = JSON.parse(localStorage.getItem('nsc_users') || '[]'); const user = { id: 'USR_' + Date.now(), name: n, phone: p, email: gET, password: btoa(gET + '_google'), createdAt: new Date().toISOString(), provider: 'google' }; u.push(user); localStorage.setItem('nsc_users', JSON.stringify(u)); AUTH._setSession(user); showAlert('google-alert', 'Account created! Redirecting...', 'success'); setTimeout(() => location.href = 'account.html', 800) }
+
+        // ===== PHONE =====
+        let pT = '';
+        function openPhoneModal() { document.getElementById('phone-modal').classList.add('active'); document.getElementById('phone-step-1').style.display = 'block'; document.getElementById('phone-step-2').style.display = 'none'; document.getElementById('phone-step-3').style.display = 'none'; document.getElementById('phone-input').focus() }
+        function phoneStep2() { const p = document.getElementById('phone-input').value.trim(); if (!/^\d{10}$/.test(p)) { showAlert('phone-alert', 'Enter a valid 10-digit phone.', 'error'); return } pT = p; document.getElementById('phone-step-1').style.display = 'none'; document.getElementById('phone-step-2').style.display = 'block'; document.getElementById('phone-alert').className = 'auth-alert'; document.querySelector('.otp-box').focus() }
+        function phoneBack() { document.getElementById('phone-step-1').style.display = 'block'; document.getElementById('phone-step-2').style.display = 'none' }
+        function otpAutoNext(i, x) { i.value = i.value.replace(/[^0-9]/g, ''); if (i.value.length === 1 && x < 3) { const n = document.querySelector(`.otp-box[data-otp="${x + 1}"]`); if (n) n.focus() } }
+        function phoneVerify() { const o = Array.from(document.querySelectorAll('.otp-box')).map(b => b.value).join(''); if (o !== '1234') { showAlert('phone-alert', 'Invalid OTP. Try: 1234', 'error'); return } const u = JSON.parse(localStorage.getItem('nsc_users') || '[]').find(u => u.phone === pT); if (u) { AUTH._setSession(u); showAlert('phone-alert', 'Login successful! Redirecting...', 'success'); setTimeout(() => location.href = 'account.html', 800) } else { document.getElementById('phone-step-2').style.display = 'none'; document.getElementById('phone-step-3').style.display = 'block'; document.getElementById('phone-alert').className = 'auth-alert' } }
+        function phoneFinish() { const n = document.getElementById('phone-name').value.trim(); if (!n || !/^[A-Za-z\s]+$/.test(n)) { showAlert('phone-alert', 'Enter a valid name.', 'error'); return } const u = JSON.parse(localStorage.getItem('nsc_users') || '[]'); const user = { id: 'USR_' + Date.now(), name: n, phone: pT, email: '', password: btoa(pT + '_phone'), createdAt: new Date().toISOString(), provider: 'phone' }; u.push(user); localStorage.setItem('nsc_users', JSON.stringify(u)); AUTH._setSession(user); showAlert('phone-alert', 'Account created! Redirecting...', 'success'); setTimeout(() => location.href = 'account.html', 800) }
+
+        // ===== FORGOT =====
+        let fI = '';
+        function openForgotModal(e) { e.preventDefault(); document.getElementById('forgot-modal').classList.add('active'); document.getElementById('forgot-step-1').style.display = 'block'; document.getElementById('forgot-step-2').style.display = 'none'; document.getElementById('fstep-1').classList.add('active'); document.getElementById('fstep-2').classList.remove('active') }
+        function forgotNext() { const i = document.getElementById('forgot-identifier').value.trim(); if (!i) { showAlert('forgot-alert', 'Enter your phone or email.', 'error'); return } fI = i; document.getElementById('forgot-step-1').style.display = 'none'; document.getElementById('forgot-step-2').style.display = 'block'; document.getElementById('fstep-2').classList.add('active'); document.getElementById('forgot-alert').className = 'auth-alert' }
+        function forgotBackStep() { document.getElementById('forgot-step-1').style.display = 'block'; document.getElementById('forgot-step-2').style.display = 'none'; document.getElementById('fstep-2').classList.remove('active') }
+        function forgotReset() { const p = document.getElementById('forgot-pass').value, c = document.getElementById('forgot-confirm').value; if (p.length < 6) { showAlert('forgot-alert', 'Password must be 6+ characters.', 'error'); return } if (p !== c) { showAlert('forgot-alert', 'Passwords do not match.', 'error'); return } const r = AUTH.resetPassword(fI, p); if (r.ok) { showAlert('forgot-alert', '✅ ' + r.msg, 'success'); setTimeout(() => closeModal('forgot-modal'), 1500) } else showAlert('forgot-alert', r.msg, 'error') }
+
+        // Close modals on backdrop click
+        document.querySelectorAll('.modal-bg').forEach(m => { m.addEventListener('click', function (e) { if (e.target === this) this.classList.remove('active') }) });
+    </script>
+</body>
+
+</html>

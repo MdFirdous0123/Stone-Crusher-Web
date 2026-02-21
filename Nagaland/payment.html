@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Now — Nagaland Stone Crusher</title>
+    <meta name="description"
+        content="Place your order for crushed stone and sand from Nagaland Stone Crusher. Easy ordering with WhatsApp confirmation.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪨</text></svg>">
+</head>
+
+<body>
+
+    <!-- ======== NAVBAR ======== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">🪨</div>
+                Nagaland Stone Crusher
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="payment.html" class="active">Order Now</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="Toggle Navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ======== PAGE HEADER ======== -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Place Your <span class="highlight">Order</span></h1>
+            <p>Select your product, enter quantity, and place your order — it's easy!</p>
+        </div>
+    </div>
+
+    <!-- ======== ORDER FORM & SUMMARY ======== -->
+    <section class="section" style="padding-top: 20px;">
+        <div class="container">
+
+            <!-- Pickup / Delivery Notice -->
+            <div class="pickup-notice">
+                <span class="notice-icon">🚛</span>
+                <div>
+                    <strong>Prices shown are for on-site pickup.</strong> Home delivery is also available at different
+                    rates.
+                    Call us at <a href="tel:+917207911513">7207911513</a> or <a href="https://wa.me/917207911513"
+                        target="_blank">WhatsApp</a> for delivery pricing.
+                </div>
+            </div>
+
+            <div class="payment-grid">
+
+                <!-- ORDER FORM -->
+                <div class="form-card">
+                    <h3>📦 Order Details</h3>
+                    <form id="order-form">
+
+                        <div class="form-group">
+                            <label for="product-select">Select Product</label>
+                            <select id="product-select" required>
+                                <option value="">— Choose a Product —</option>
+                                <optgroup label="🪨 Crusher Products">
+                                    <option value="chaana-gitti-20mm">Chaana Gitti (20mm) — ₹25/cft</option>
+                                    <option value="gitti-10mm">3/4 Gitti (10mm) — ₹45/cft</option>
+                                    <option value="stone-dust">Stone Dust — ₹10/cft</option>
+                                </optgroup>
+                                <optgroup label="🏖️ Sand Products">
+                                    <option value="daupani-balu">Deopani Balu — ₹50/cft</option>
+                                    <option value="local-balu">Local Balu — ₹20/cft</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity">Quantity (in CFT)</label>
+                            <input type="number" id="quantity" placeholder="Enter quantity in cft" min="1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customer-name">Your Name</label>
+                            <input type="text" id="customer-name" placeholder="Enter your full name"
+                                pattern="[A-Za-z\s]+" title="Only letters and spaces allowed"
+                                oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customer-phone">Phone Number</label>
+                            <input type="tel" id="customer-phone" placeholder="Enter 10-digit phone number"
+                                pattern="[0-9]{10}" maxlength="10" title="Enter exactly 10 digits"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customer-address">Delivery Address</label>
+                            <textarea id="customer-address" placeholder="Enter delivery address in Nagaland"
+                                rows="3"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"
+                            style="width: 100%; justify-content: center; margin-top: 8px;">
+                            💬 Place Order via WhatsApp
+                        </button>
+
+                    </form>
+                </div>
+
+                <!-- ORDER SUMMARY + PAYMENT INFO -->
+                <div>
+                    <div class="order-summary">
+                        <h3>🧾 Order Summary</h3>
+
+                        <div class="summary-row">
+                            <span class="label">Product</span>
+                            <span class="value" id="summary-product">—</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="label">Price</span>
+                            <span class="value" id="summary-price">—</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="label">Min Order</span>
+                            <span class="value" id="summary-min-order">—</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="label">Your Quantity</span>
+                            <span class="value" id="summary-quantity">—</span>
+                        </div>
+
+                        <div class="summary-total">
+                            <span>Total Amount</span>
+                            <span class="value" id="summary-total">₹0</span>
+                        </div>
+                    </div>
+
+                    <!-- PAYMENT INFORMATION -->
+                    <div class="payment-info-box" style="margin-top: 24px;">
+                        <h4>💳 Payment Information</h4>
+                        <p>
+                            <strong>Payment Mode:</strong> Cash on Delivery / UPI / Bank Transfer<br><br>
+
+                            <!-- ====== EDIT YOUR PAYMENT DETAILS BELOW ====== -->
+                            <strong>UPI ID:</strong> xxxx <br>
+                            <strong>Bank Name:</strong> Your Bank Name<br>
+                            <strong>Account No:</strong> XXXX-XXXX-XXXX<br>
+                            <strong>IFSC Code:</strong> XXXX0XXXXXX<br>
+                            <strong>Account Holder:</strong> Your Name<br>
+                            <!-- ====== EDIT YOUR PAYMENT DETAILS ABOVE ====== -->
+
+                            <br>
+                            <strong>📞 For Payment Confirmation:</strong><br>
+                            Call or WhatsApp: <a id="config-phone-link" href="#"><span
+                                    id="config-phone-display"></span></a>
+                        </p>
+                        <p class="editable-notice">⚠️ Payment details are managed in js/config.js for security.</p>
+                    </div>
+
+                    <!-- HOW IT WORKS -->
+                    <div
+                        style="background: var(--bg-card); border-radius: var(--radius-lg); padding: 28px; border: 1px solid var(--border); margin-top: 24px;">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 16px;">🔄 How Ordering Works
+                        </h3>
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div style="display: flex; gap: 14px; align-items: flex-start;">
+                                <div
+                                    style="width: 32px; height: 32px; background: rgba(212,160,23,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700; color: var(--accent); font-size: 0.9rem;">
+                                    1</div>
+                                <div>
+                                    <strong>Select Your Product</strong>
+                                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Choose the product you
+                                        want and enter quantity.</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 14px; align-items: flex-start;">
+                                <div
+                                    style="width: 32px; height: 32px; background: rgba(212,160,23,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700; color: var(--accent); font-size: 0.9rem;">
+                                    2</div>
+                                <div>
+                                    <strong>Send Order via WhatsApp</strong>
+                                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Click "Place Order" to
+                                        send order details via WhatsApp.</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 14px; align-items: flex-start;">
+                                <div
+                                    style="width: 32px; height: 32px; background: rgba(212,160,23,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700; color: var(--accent); font-size: 0.9rem;">
+                                    3</div>
+                                <div>
+                                    <strong>Make Payment</strong>
+                                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Pay via UPI, bank
+                                        transfer, or cash on delivery.</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 14px; align-items: flex-start;">
+                                <div
+                                    style="width: 32px; height: 32px; background: rgba(212,160,23,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700; color: var(--accent); font-size: 0.9rem;">
+                                    4</div>
+                                <div>
+                                    <strong>Receive Delivery</strong>
+                                    <p style="color: var(--text-secondary); font-size: 0.9rem;">We deliver to your
+                                        location in Nagaland. Done!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>🪨 Nagaland Stone Crusher</h3>
+                    <p>Nagaland's trusted stone crusher. Quality crushed stone, sand, and construction materials — at
+                        the best prices.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="payment.html">Order Now</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>📞 <a href="tel:+917207911513">7207911513</a></li>
+                        <li>💬 <a href="https://wa.me/917207911513" target="_blank">WhatsApp</a></li>
+                        <li>📍 Nagaland, India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 Nagaland Stone Crusher. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="scroll-top" aria-label="Scroll to top">↑</button>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Populate config values and auto-select product from URL
+        document.addEventListener('DOMContentLoaded', () => {
+            // Populate sensitive data from config
+            const upiEl = document.getElementById('config-upi-id');
+            const phoneLinkEl = document.getElementById('config-phone-link');
+            const phoneDisplayEl = document.getElementById('config-phone-display');
+
+            if (upiEl && SITE_CONFIG) upiEl.textContent = SITE_CONFIG.upiId;
+            if (phoneLinkEl && SITE_CONFIG) phoneLinkEl.href = SITE_CONFIG.phoneLink;
+            if (phoneDisplayEl && SITE_CONFIG) phoneDisplayEl.textContent = SITE_CONFIG.phone;
+
+            // Auto-select product from URL parameter
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('product');
+            if (productId && productSelect) {
+                productSelect.value = productId;
+                updateOrderSummary();
+            }
+        });
+    </script>
+</body>
+
+</html>
